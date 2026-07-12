@@ -1100,12 +1100,12 @@ function renderKPIs(data, filtered){
   document.getElementById('mDesa').textContent = totalDesa;
   document.getElementById('mTahun').textContent = (minY&&maxY) ? `${minY}–${maxY}` : '-';
 
-  const rowFoot = filtered ? `dari ${RAW.length.toLocaleString('id-ID')} total baris (terfilter)` : 'setelah desa dipecah per baris';
+  const rowFoot = filtered ? `dari ${RAW.length.toLocaleString('id-ID')} total baris (terfilter)` : 'Jumlah Dokumen Kerjasama Desa';
   const kpis = [
-    {label:'Total Baris Register', value:data.length, foot:rowFoot},
-    {label:'Desa Terlibat', value:totalDesa, foot: filtered ? 'desa unik pada hasil filter' : 'desa unik pada seluruh dokumen'},
-    {label:'Kabupaten', value:totalKab, foot: filtered ? 'kabupaten pada hasil filter' : 'kabupaten dengan data kerjasama'},
-    {label:'Kerjasama Pihak Ketiga', value:pihakKetiga, foot:`${data.length?Math.round(pihakKetiga/data.length*100):0}% dari baris ditampilkan`},
+    {label:'Total Kerjasama yang terdata', value:data.length, foot:rowFoot},
+    {label:'Desa Terlibat', value:totalDesa, foot: filtered ? 'Jumlah Desa yang terlibat' : 'Jumlah Desa di seluruh dokumen'},
+    {label:'Kabupaten', value:totalKab, foot: filtered ? 'kabupaten pada hasil filter' : 'Kabupaten dengan Data Kerjasama'},
+    {label:'Kerjasama Pihak Ketiga', value:pihakKetiga, foot:`${data.length?Math.round(pihakKetiga/data.length*100):0}% dari Jumlah Dokumen yang ada`},
   ];
   document.getElementById('kpiRow').innerHTML = kpis.map(k => `
     <div class="panel kpi">
