@@ -1106,7 +1106,7 @@ function renderKPIs(data, filtered){
 
   const rowFoot = filtered ? `dari ${RAW.length.toLocaleString('id-ID')} total baris (terfilter)` : '';
   const kpis = [
-    {label:'Total Baris Register', value:data.length, foot:rowFoot},
+    {label:'Total Kerjasama yang terdata', value:data.length, foot:rowFoot},
     {label:'Desa Terlibat', value:totalDesa, foot: filtered ? '' : ''},
     {label:'Kabupaten', value:totalKab, foot: filtered ? '' : ''},
     {label:'Kerjasama Pihak Ketiga', value:pihakKetiga, foot: filtered ? '' : ''},
