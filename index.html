@@ -372,7 +372,7 @@
   .source-btn[aria-expanded="true"] .chev{ transform:rotate(180deg); }
 
   .source-popover{
-    position:absolute; top:calc(100% + 10px); left:0; width:480px; max-width:min(480px, 88vw);
+    position:absolute; top:calc(100% + 10px); right:0; width:480px; max-width:min(480px, 88vw);
     background:var(--paper); border-radius:8px; box-shadow:var(--shadow); border:1px solid var(--paper-3);
     padding:18px 20px 16px; z-index:60; display:none;
   }
@@ -402,7 +402,9 @@
       <a class="tab-link active" id="tabDashboard" href="#top"><span class="tab-icon">▣</span>Dashboard</a>
       <a class="tab-link" id="tabData" href="#dataSection"><span class="tab-icon">☰</span>Data</a>
     </nav>
-    <span class="navbar-divider"></span>
+  </div>
+  <div class="navbar-right">
+    <span class="updated-chip" id="lastUpdatedChip"></span>
     <div class="source-compact">
       <button class="source-btn" id="sourceBtn" type="button" aria-expanded="false">
         <span class="pulse-dot" id="navDot"></span>
@@ -435,9 +437,6 @@
       </div>
     </div>
   </div>
-  <div class="navbar-right">
-    <span class="updated-chip" id="lastUpdatedChip"></span>
-  </div>
 </nav>
 
 <div class="hero" id="top">
@@ -445,13 +444,13 @@
     <div>
       <h1 class="title">Data Perjanjian Kerjasama Desa</h1>
       <p class="sub">Dasbor pemantauan data kerjasama antar-desa dan kerjasama desa dengan pihak ketiga di seluruh kabupaten Provinsi Kalimantan Barat</p>
-    <div class="hero-meta" id="heroMeta">
+    <div class="hero-meta" id="heroMeta" style="display:none;">
         <div><strong id="mKab">-</strong>Kabupaten</div>
         <div><strong id="mDesa">-</strong>Desa terlibat</div>
         <div><strong id="mTahun">-</strong>Rentang tahun dokumen</div>
       </div>
     </div>
-    <div class="stamp">
+    <div class="stamp" style="display:none;">
       <div class="stamp-core">
         <div class="n" id="stampTotal">0</div>
         <div class="l">Kerjasama<br>Tercatat</div>
