@@ -979,14 +979,14 @@ async function connectToAppsScript(raw, {silent} = {}){
     statusEl.className = 'status-line ok';
     statusEl.textContent = `● Realtime aktif — ${n} baris dimuat. Sinkronisasi setiap ${GAS_POLL_MS/1000} detik.`;
     document.getElementById('liveDot').classList.add('live');
-    updateSourceIndicator('live', 'Realtime · Apps Script');
+    updateSourceIndicator('live', 'Realtime · Data Spreadsheet');
     stopPolling();
     pollTimer = setInterval(async () => {
       try{
         const n2 = await fetchAndApplyAppsScript(url);
         statusEl.className = 'status-line ok';
         statusEl.textContent = `● Realtime aktif — ${n2} baris (diperbarui ${new Date().toLocaleTimeString('id-ID')}).`;
-        updateSourceIndicator('live', 'Realtime · Apps Script');
+        updateSourceIndicator('live', 'Realtime · Data Spreadsheet');
       }catch(err){
         statusEl.className = 'status-line err';
         statusEl.textContent = 'Gagal memeriksa pembaruan: ' + err.message;
