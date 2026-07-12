@@ -897,6 +897,11 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 /* ============ GOOGLE APPS SCRIPT REALTIME POLLING ============ */
 const GAS_POLL_MS = 10000; // realtime-ish: check for changes every 10s
 
+/* Pre-configured Web App URL — dashboard connects to this automatically on
+   every load/refresh, no manual paste needed. Change this if you redeploy
+   the Apps Script with a new URL. Leave as '' to disable auto-connect. */
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbyNGVKt0mnQcu-3IMKIa0LMBMQap4V-kGmIRrq9_-4MRWYvbImdUkj07HqMozW1r0d0CQ/exec';
+
 /* Accept the Web App /exec URL pasted from Apps Script deployment.
    Apps Script Web Apps (deploy: "Anyone" access) serve ContentService JSON
    responses with permissive CORS by default, so a plain fetch() works
@@ -942,10 +947,14 @@ if(gasCopyBtn){
   });
 }
 
-document.getElementById('connectBtn').addEventListener('click', async () => {
-  const raw = document.getElementById('sheetUrl').value.trim();
+/* Core connect routine, shared by the manual "Hubungkan" button and the
+   auto-connect that runs on every page load/refresh using DEFAULT_GAS_URL. */
+async function connectToAppsScript(raw, {silent} = {}){
   const statusEl = document.getElementById('sheetStatus');
-  if(!raw){ statusEl.className='status-line err'; statusEl.textContent='Tempel URL Web App Apps Script terlebih dahulu.'; return; }
+  if(!raw){
+    if(!silent){ statusEl.className='status-line err'; statusEl.textContent='Tempel URL Web App Apps Script terlebih dahulu.'; }
+    return;
+  }
   const resolved = resolveAppsScriptUrl(raw);
   if(resolved.error === 'unrecognized'){
     statusEl.className = 'status-line err';
@@ -955,7 +964,7 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
   }
   const url = resolved.url;
   statusEl.className = 'status-line';
-  statusEl.textContent = 'Menghubungkan...';
+  statusEl.textContent = silent ? 'Menyambungkan otomatis ke sumber tersimpan...' : 'Menghubungkan...';
   try{
     const n = await fetchAndApplyAppsScript(url);
     statusEl.className = 'status-line ok';
@@ -981,7 +990,18 @@ document.getElementById('connectBtn').addEventListener('click', async () => {
     document.getElementById('liveDot').classList.remove('live');
     updateSourceIndicator('err', 'Gagal terhubung');
   }
+}
+
+document.getElementById('connectBtn').addEventListener('click', () => {
+  connectToAppsScript(document.getElementById('sheetUrl').value.trim());
 });
+
+/* Auto-connect on every load/refresh — no manual paste required. */
+if(DEFAULT_GAS_URL){
+  const urlField = document.getElementById('sheetUrl');
+  urlField.value = DEFAULT_GAS_URL;
+  connectToAppsScript(DEFAULT_GAS_URL, {silent:true});
+}
 
 /* ============ AGGREGATION HELPERS ============ */
 function countBy(arr, key){
