@@ -1442,12 +1442,14 @@ document.getElementById('pgLast').addEventListener('click', ()=>{ page=Math.ceil
 function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
 
 /* ============ TABLE ZOOM ============ */
-let tableZoom = 0.9;
+const BASE_SCALE = 0.9; // skala fisik dasar tabel: dulunya 100% lama, sekarang dianggap 100% baru
+let tableZoom = 1;
 const ZOOM_MIN = 0.6, ZOOM_MAX = 1.6, ZOOM_STEP = 0.1;
 function applyTableZoom(){
   const wrap = document.getElementById('tableWrap');
-  wrap.style.transform = `scale(${tableZoom})`;
-  wrap.style.width = (100 / tableZoom) + '%';
+  const actualScale = tableZoom * BASE_SCALE;
+  wrap.style.transform = `scale(${actualScale})`;
+  wrap.style.width = (100 / actualScale) + '%';
   document.getElementById('zoomLevel').textContent = Math.round(tableZoom * 100) + '%';
   document.getElementById('zoomOutBtn').disabled = tableZoom <= ZOOM_MIN;
   document.getElementById('zoomInBtn').disabled = tableZoom >= ZOOM_MAX;
@@ -1473,6 +1475,7 @@ document.getElementById('tableWrap').addEventListener('wheel', (e) => {
   applyTableZoom();
 }, { passive:false });
 applyTableZoom();
+
 
 function applyAll(){
   populateFilters(RAW);
