@@ -1442,7 +1442,7 @@ document.getElementById('pgLast').addEventListener('click', ()=>{ page=Math.ceil
 function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
 
 /* ============ TABLE ZOOM ============ */
-let tableZoom = 1;
+let tableZoom = 0.9;
 const ZOOM_MIN = 0.6, ZOOM_MAX = 1.6, ZOOM_STEP = 0.1;
 function applyTableZoom(){
   const wrap = document.getElementById('tableWrap');
