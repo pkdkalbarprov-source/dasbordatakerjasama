@@ -1,6 +1,6 @@
 {
-  "name": "Data Kerjasama Desa - Bidang PKD DPMD KALBAR",
-  "short_name": "Kerjasama Desa",
+  "name": "SIMAK DESA - Bidang PKD DPMD KALBAR",
+  "short_name": "SIMAK DESA",
   "description": "Dashboard data kerjasama desa Kalimantan Barat",
   "start_url": "./index.html",
   "scope": "./",
