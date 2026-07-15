@@ -286,7 +286,8 @@
   .zoom-ctrl{ display:flex; align-items:center; gap:2px; margin-left:auto; background:var(--paper-2); border:1px solid var(--paper-3); border-radius:6px; padding:3px; }
   .zoom-btn{ width:28px; height:28px; padding:0; display:flex; align-items:center; justify-content:center; font-size:15px; line-height:1; border-radius:4px; }
   .zoom-level{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft); width:40px; text-align:center; user-select:none; }
-  #tableWrap{ transform-origin: top left; transition: transform .15s ease; }
+  #tableWrap{ }
+  #registerTable{ transition: zoom .15s ease; }
 
   /* ---------- FILTERS ---------- */
   .filters{ padding:18px 20px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
@@ -306,8 +307,31 @@
   }
 
   /* ---------- TABLE ---------- */
-  .table-wrap{ overflow:auto; }
-  table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .table-wrap{
+    overflow:auto;
+    height:720px; /* atur tinggi pasti di sini */
+    border-radius:8px;
+    scrollbar-width:thin; /* firefox */
+    scrollbar-color: var(--gold-soft) var(--paper-2); /* firefox */
+  }
+  .table-wrap::-webkit-scrollbar{ width:9px; height:9px; }
+  .table-wrap::-webkit-scrollbar-track{
+    background:var(--paper-2);
+    border-radius:8px;
+  }
+  .table-wrap::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg, var(--gold-soft), var(--gold));
+    border-radius:8px;
+    border:2px solid var(--paper-2);
+    background-clip:padding-box;
+  }
+  .table-wrap::-webkit-scrollbar-thumb:hover{
+    background:var(--gold-soft);
+    background-clip:padding-box;
+    box-shadow:0 0 6px rgba(215,249,52,0.5);
+  }
+  .table-wrap::-webkit-scrollbar-corner{ background:var(--paper-2); }
+  table{ width:100%; border-collapse:collapse; font-size:11px; }
   thead th{
     text-align:left; font-family:'JetBrains Mono',monospace; font-size:10.5px; text-transform:uppercase;
     letter-spacing:.04em; color:var(--ink-soft); padding:10px 12px; border-bottom:2px solid rgba(215,249,52,0.35);
@@ -337,7 +361,7 @@
     margin-left:2px; position:relative; top:-1px;
   }
 
-  .pagination{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; font-size:12px; color:var(--ink-soft); flex-wrap:wrap; gap:10px; }
+  .pagination{ display:flex; align-items:center; justify-content:space-between; padding:14px 20px; font-size:12px; color:var(--ink-soft); flex-wrap:wrap; gap:10px; height:56px; }
   .pagination .pg-btns{ display:flex; gap:6px; }
   .pagination button{ padding:6px 11px; font-size:12px; }
   .pagination button:disabled{ opacity:.4; cursor:not-allowed; }
@@ -621,7 +645,7 @@ let EXTRA_COLUMNS = SEED.extraColumns || []; // [{key,label}] detected beyond th
 let VIEW = RAW.slice();
 let sortKey = null, sortDir = 1;
 let page = 1;
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 10000;
 let pollTimer = null;
 
 const BASE_COLS = [
@@ -1467,14 +1491,18 @@ document.getElementById('pgLast').addEventListener('click', ()=>{ page=Math.ceil
 function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
 
 /* ============ TABLE ZOOM ============ */
-const BASE_SCALE = 0.9; // skala fisik dasar tabel: dulunya 100% lama, sekarang dianggap 100% baru
+const BASE_SCALE = 1; // skala fisik dasar tabel: dulunya 100% lama, sekarang dianggap 100% baru
 let tableZoom = 1;
 const ZOOM_MIN = 0.6, ZOOM_MAX = 1.6, ZOOM_STEP = 0.1;
 function applyTableZoom(){
-  const wrap = document.getElementById('tableWrap');
+  const table = document.getElementById('registerTable');
   const actualScale = tableZoom * BASE_SCALE;
-  wrap.style.transform = `scale(${actualScale})`;
-  wrap.style.width = (100 / actualScale) + '%';
+  // `zoom` diterapkan ke <table>, BUKAN ke .table-wrap — supaya tinggi
+  // kontainer luar (.table-wrap) tetap konstan sesuai CSS (tidak ikut
+  // mengecil saat zoom out). Yang berubah ukuran hanya kontennya, lalu
+  // .table-wrap (overflow:auto) yang menampilkan scrollbar bila konten
+  // masih lebih besar dari tinggi tetapnya.
+  table.style.zoom = actualScale;
   document.getElementById('zoomLevel').textContent = Math.round(tableZoom * 100) + '%';
   document.getElementById('zoomOutBtn').disabled = tableZoom <= ZOOM_MIN;
   document.getElementById('zoomInBtn').disabled = tableZoom >= ZOOM_MAX;
